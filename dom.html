@@ -1,0 +1,68 @@
+<pre>
+    MANIPULER LE DOM AVEC JAVASCRIPT 
+
+    DOM : Document Object Model => interface de programmation, qui représente les noeuds interconnectés (balises) d'une page HTML
+
+    /atteindre les éléments du DOM : querySelector()
+
+    <script>
+        let list = document.querySelector("ul")
+    </script>
+    => permet de pointer le premier élément du DOM répondant à la requête 
+
+    <script>
+        let list = document.querySelector("ul")
+        let listElements = list.querySelectorAll("li")
+    </script>
+    => permet de récupérer tous les éléments "li" de "ul"
+
+    console.log(list);
+    =>
+    <ul>
+        <li>
+            ::marker
+            "texte texte texte"
+        </li>
+        <li>...</li>
+        <li>...</li>
+    </ul>
+    => présente ul et tous les noeuds enfants, lesquels sont accompagnés d'un pseudo-element ::marker(la puce) et d'un noeud de texte
+
+    console.log(listElements);
+    =>
+    Nodelist(3) [li,li,li] 
+    0: li 
+    1:li 
+    2:li 
+    length: 3
+    __proto__:NodeList
+    => comporte un objet NodeList contenant 3 entrées dans un tableau indexé 
+
+
+    /modifier les éléments du DOM
+    ex : itérer à travers la Nodelist et modifier entrée après entrée 
+    <script>
+        let list = document.querySelector("ul")
+        let listElements = list.querySelectorAll("li")
+
+        listElements.forEach(function(element){
+            element.style.color="red"
+        })
+    </script>
+
+        /!\ forEach prend en paramètre une fonction anonyme ("callback"), qui est exécutée à chaque tour de boucle sur la variable passée en argument "element", qui représente
+        chaque 
+
+    /connaître les propriétés d'un élément du DOM 
+    console.dir() => liste les composants d'objet Javascript => permet de vérifier que le code JS effectue les bonnes actions sur les bonnes propriétés
+
+    <script>
+        let list = document.querySelector("ul")
+        let listElements = list.querySelectorAll("li")
+
+        listElements.forEach(function(element){
+        element.style.color="red"
+        console.dir(element)
+        })
+    </script>
+</pre>
