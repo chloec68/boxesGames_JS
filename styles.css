@@ -1,5 +1,5 @@
 body{
-    background-color:black;
+    background-color:rgb(25, 23, 23);
 }
 
 h1{
@@ -18,7 +18,7 @@ h1{
     width:75px;
     height:75px;
     border:1px solid white;
-    background-color:rgb(212,250,76);
+    background-color:rgb(165, 207, 48);
     font-size:3em;
     text-align:center;
     line-height:75px;
