@@ -89,12 +89,12 @@
             
             //ETAPE 11 : Demander à l'utilisateur avec combien de cartes il veut jouer
 
-            let nbCartes = Number(window.prompt("Choisissez le nombre de cartes : ",""));
+            let nbBox = Number(window.prompt("How many boxes do you want to play with : ",""));
 
-            if(!isNaN(nbCartes)){
+            if(!isNaN(nbBox)){
 
                 //****************************************** ETAPE 2
-                for(let i=1;i<=nbCartes;i++){
+                for(let i=1;i<=nbBox;i++){
                     let newBox = box.cloneNode()
                     newBox.innerText = i
                     board.appendChild(newBox)
