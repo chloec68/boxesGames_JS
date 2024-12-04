@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        <title>Jeu JS</title>
+    </head>
+
+    <body>
+        <h1>Boxes game</h1>
+        
+        <div id="board"></div>
+
+        <script>
+            
+            //****************************************** ETAPE 4
+            // Optimisons le code : il fait plusieurs fois fait référence à board.children - et cette portion de code va devoir être réutilisée
+            // plus tard. Donc, on isole l'algorithme dans une fonction :
+            // }
+
+            function shuffleChildren(parent){
+            let children = parent.children
+            let i = children.length, k , temp
+                while(--i > 0){
+                    k = Math.floor(Math.random()*(i+1))
+                    temp = board.children[k]
+                    children[k] = children[i]
+                    parent.appendChild(temp)
+                }
+            }
+            //par convention, la fonction est placée en début de code
+
+            //****************************************** ETAPE 10
+
+            function showReaction(type,clickedBox){
+                clickedBox.classList.add(type)
+                if(type !== "success"){
+                    setTimeout(function(){
+                        clickedBox.classList.remove(type)
+                    },800)
+                }
+            }
+
+            //au clique, la fonction ci-dessus est appelée et provoque un changement de style sur la boîte
+            // Les réactions sont :
+            // error : la boîte cliquée est invalide (affichage en rouge)
+            // notice : la boite cliquée l'avait déjà été (affichage en bleu)
+            // success : la boîte cliquée est valide et était la dernière, partie gagnée (affichage en vert)
+
+            // la fonction attend deux arguments : 
+            // type (une chaîne de caractères) : correspond à la réaction souhaitée
+            // clickedBox (HTMLElement) : boîte sur laquelle l'effet doit être appliqué
+
+            //La fonction applique donc la classe CSS "type" (error, success ou notice) à la boîté passée en argument
+            // puis elle vérifie que le type n'est pas égal à "success" pour exécuter un setTimeout() : permet de retarder l'exécution d'une
+            // ou plsrs instructions
+            // en l'espèce, on retarde la suppression de la class CSS ajoutée de 0.8 sec
+
+            // on peut maintenant remplacer chaque alert() par des appels à la fonction
+
+            //****************************************** ETAPE 1
+
+            const box = document.createElement("div")
+            // en appelant la méthode createElement() de l'objet document, un nouvel objet HTMLElement est instancié, qui sera représenté par la
+            // balise spécifiée en argument de cette méthode ("div"). 
+            // on la stocke dans une constante, qui est préférable aux variables lorsqu'on crée un élément du DOM, pour garantir l'intégrité de
+            // l'élément tout au long du code sans pouvoir réassigner sa valeur. 
+            box.classList.add("box")
+            // on modifie sa propriété classList (contenant la liste des classes CSS attribuées à l'élément) pôur lui ajouter la class .box (appel
+            // de la méthode add() de classList)
+
+            // A ce moment, un nouvel élément du DOM est instancié en mémoire (<div class="box"></div>), mais non présent sur la page : il faut
+            // le placer dans le DOM Tree. Nous allons le placer en enfant de la div #board en utilisant la méthode appendChild() de l'objet document
+
+            const board = document.querySelector("#board")
+            // board.appendChild(box)
+            //appendChild() est une méthode qui place un élément du DOM à la FIN du contenu de l'élément visé. 
+            //prepend() est une méthode qui place un élément du DOM au DEBUT de contenu de l'élément visé. 
+
+            // box.innerText = 1
+            // la constante box permet de pointer vers l'élément du DOM qu'elle contient à tout moment, dès lors que l'élément est présent
+            // en mémoire
+
+            //****************************************** ETAPE 7
+            let nb=1
+            // on délare la variable qui représente le numéro de la boîte attendue et qui s'incrémente en cas de clic valide (cf:supra)
+            
+            //ETAPE 11 : Demander à l'utilisateur avec combien de cartes il veut jouer
+
+            let nbCartes = Number(window.prompt("Choisissez le nombre de cartes : ",""));
+
+            if(!isNaN(nbCartes)){
+
+                //****************************************** ETAPE 2
+                for(let i=1;i<=nbCartes;i++){
+                    let newBox = box.cloneNode()
+                    newBox.innerText = i
+                    board.appendChild(newBox)
+                
+                    //****************************************** ETAPE 5
+
+                    //on ajoute le addEventListener ici pour l'associer à chaque boîte
+                    //sinon il aurait fallu créer une nouvelle boucle pour associer l'évènement à chaque boîte
+                    newBox.addEventListener("click",function(){
+                        console.log("Boîte n°"+i+",click !")
+                        // on ajoute un console.log pour tester que notre code fonctionne
+                        
+                        //****************************************** ETAPE 6
+                        // newBox.classList.add("box-clicked")
+                        // on modifie le style visuel de la box cliquée en ajoutant la classe .box-clicked préalablement créé dans le CSS à
+                        // chaque nouvelle boîte cliquée
+
+                        //****************************************** ETAPE 7.5
+                        // on vérifie si la boîte sur laquelle le clic s'effectue possède le même numéro que ce que contient la variable nb
+                        // si condition = true, on ajoute la class CSS et on incrémente nb
+                        // à partir de maintenant, la box se grise uniquement si le clique a eu lieu sur la "bonne"
+                        if(i==nb){
+                            newBox.classList.add("box-clicked")
+                            //re-mélange des boîtes à chaque clique valide
+                            shuffleChildren(board)
+                            //****************************************** ETAPE 8.1
+                            if(nb==board.children.length){
+                                // alert("VICTOIRE")
+                                //****************************************** ETAPE 10.1
+                                board.querySelectorAll(".box").forEach(function(box){
+                                    showReaction("success",box)
+                                })
+                            }
+                            nb++
+                        //****************************************** ETAPE 8.2
+                        }else if(i>nb){
+                            // alert("Erreur, recommencez")
+                            //****************************************** ETAPE 10.2
+                            showReaction("error",newBox)
+                            nb=1
+                            //****************************************** ETAPE 9
+                            board.querySelectorAll(".box-clicked").forEach(function(validBox){
+                                validBox.classList.remove("box-clicked")
+                            })
+                            // lorsque le jeu doit redémarrer (on se place donc dans la partie conditionnelle correspondante, on sélectionne les 
+                            //box grisées et on supprime la class pour que la box reprenne son aspect initial 
+                            //rappel : querySelectorAll récupère un tableau associatif, d'où forEach pour passer sur chaque élément représenté par
+                            // 'validBox')
+
+                            shuffleChildren(board)
+                            // remélange des boîtes en cas d'erreur
+                        }
+                        //****************************************** ETAPE 8.2
+                        else{
+                            // alert("Déjà cliquée")
+                            //****************************************** ETAPE 10.3
+                            showReaction("notice",newBox)
+                        }
+                    
+                    })
+                }
+
+            }else{
+                alert("Entrez une valeur numérique")
+            }
+
+
+            // création de dix boîtes
+            // la particularité ici est qu'il faille créer une nouvelle variable (let newBox) qui aura pour valeur une copie (clône) de l'élément
+            // box (et non pas l'élément box lui-même - sinon nous aurions à chaque tour de boucle, déplacé et modifié le même élément)
+                                // Décommenter ce code pour voir le résultat en l'absence de clône
+                                // for(let i=1; i<=10;i++){
+                                //     box.innerText=i;
+                                //     board.appendChild(box)
+                                // }
+            
+            //****************************************** ETAPE 3
+
+            // le code qui suit permet de mélanger les boîtes aléatoirement et d'obtenir un ordre différent à chaque rafraîssement de la page
+            // la solution la plus connue et simple est l'algorithme de mélange de Fisher-Yates, aussi appelé mélange de Knuth ou algorithme P
+
+            // let i = board.children.length,k,temp
+
+            // while(--i > 0){
+                // on boucle tant que 1 ôté de i est toujours positif 
+                // k stocke un nombre aléatoire basé sur i
+
+                // k = Math.floor(Math.random()*(i+1))
+
+                // temp = board.children[k]
+                // temp pointe temporairement l'élément à la position k dans board
+                
+                // board.children[k] = board.children[i]
+                // remplace l'élément à la position k par l'élément à la position i 
+               
+
+                // board.appendChild(temp)
+                // place l'élément k pointé temporairement à la fin du contenu de board 
+
+            //****************************************** ETAPE 4.5
+
+            shuffleChildren(board)
+
+
+
+        </script>
+        
+    </body>
+</html>
+
